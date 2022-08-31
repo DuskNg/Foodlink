@@ -52,6 +52,7 @@ export const BodyContent = () => {
 
   const onchangePagination: PaginationProps["onChange"] = (page) => {
     setCurrentPage(page);
+    console.log("📢[BodyContent.tsx:55]: page: ", page);
   };
   return (
     <>
