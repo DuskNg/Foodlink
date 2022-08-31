@@ -6,17 +6,7 @@ import { User } from "../../models";
 
 export const Navigation = () => {
   const dispatch = useAppDispatch();
-  const slug = useLocation();
-
   const user: User = JSON.parse(localStorage.getItem("user") || "{}");
-  const size = Object.keys(user).length;
-
-  if (slug.pathname === "/") {
-    if (localStorage.getItem("accessToken") && localStorage.getItem("user")) {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("user");
-    }
-  }
 
   return (
     <>
@@ -27,23 +17,17 @@ export const Navigation = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto d-flex align-items-center">
               <NavDropdown
-                title={
-                  size !== 0 ? `${user.firstName} ${user.lastName}` : "Username"
-                }
+                title={`${user.firstName} ${user.lastName}`}
                 id="basic-nav-dropdown"
               >
                 <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
                 <NavDropdown.Divider />
-                {size !== 0 ? (
-                  <NavDropdown.Item
-                    href="/login"
-                    onClick={() => dispatch(authActions.logout())}
-                  >
-                    Logout
-                  </NavDropdown.Item>
-                ) : (
-                  <NavDropdown.Item href="/login">Login</NavDropdown.Item>
-                )}
+                <NavDropdown.Item
+                  href="/"
+                  onClick={() => dispatch(authActions.logout())}
+                >
+                  Logout
+                </NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>

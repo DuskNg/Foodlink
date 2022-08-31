@@ -4,9 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { authActions, selectIsLoggedIn, selectMessage } from "../authSlice";
 
-export interface LoginPageProps {}
-
-const LoginPage = (props: LoginPageProps) => {
+export const LoginPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const loginSuccess = useAppSelector(selectIsLoggedIn);
@@ -91,5 +89,3 @@ const LoginPage = (props: LoginPageProps) => {
     </>
   );
 };
-
-export default LoginPage;

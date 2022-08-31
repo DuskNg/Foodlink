@@ -1,6 +1,6 @@
 import { AddPayload } from "../components/Layout/AddProduct";
 import { UpdatePayload } from "./../components/Layout/VanDetail";
-import { DeletePayload } from "./../components/Layout/Content";
+import { DeletePayload } from "../components/Layout/BodyContent";
 import { Vans } from "./../models/vans";
 import { ListResponse } from "./../models/common";
 import axiosClient from "./axiosClient";

@@ -4,9 +4,8 @@ import { Link } from "react-router-dom";
 import { v4 } from "uuid";
 import authApi from "../../../api/authApi";
 import { useAppDispatch } from "../../../app/hooks";
-import { User } from "../../../models";
 
-const RegistrationPage = () => {
+export const RegistrationPage = () => {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -135,5 +134,3 @@ const RegistrationPage = () => {
     </>
   );
 };
-
-export default RegistrationPage;
