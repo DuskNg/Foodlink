@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   selectVansMessage,
@@ -10,6 +10,7 @@ import {
 import { User, Vans } from "../../models";
 import { Button, Card, Pagination, Space } from "antd";
 import type { PaginationProps } from "antd";
+import { AddProduct } from "./AddProduct";
 
 export interface DeletePayload {
   id: string | undefined;
@@ -17,7 +18,6 @@ export interface DeletePayload {
 }
 
 export const BodyContent = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const vanList: Vans[] = useAppSelector(selectVans);
   const vanMessage = useAppSelector(selectVansMessage);
@@ -52,13 +52,10 @@ export const BodyContent = () => {
 
   const onchangePagination: PaginationProps["onChange"] = (page) => {
     setCurrentPage(page);
-    console.log("📢[BodyContent.tsx:55]: page: ", page);
   };
   return (
     <>
-      <Link to="/admin/add">
-        <Button style={{}}>Add new Van</Button>
-      </Link>
+      <AddProduct />
       {showMessage && <p>{vanMessage}</p>}
       {vanList.length !== 0 &&
         currentVans.map((van, index) => (

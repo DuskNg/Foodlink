@@ -73,12 +73,14 @@ const vanSlice = createSlice({
     // add new vans
     addVan(state, action: PayloadAction<AddPayload>) {
       state.isAdding = true;
+      state.message = "";
     },
     addVanSucceeded(state) {
       state.isAdding = false;
     },
-    addVanFailed(state) {
+    addVanFailed(state, action: PayloadAction<string>) {
       state.isAdding = false;
+      state.message = action.payload;
     },
 
     //get by id

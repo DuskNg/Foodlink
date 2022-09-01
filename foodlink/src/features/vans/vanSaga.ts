@@ -57,7 +57,9 @@ function* addVanHandler(payload: AddPayload) {
     yield call(vansApi.add, payload);
     yield put(vanActions.addVanSucceeded());
   } catch (error) {
-    yield put(vanActions.addVanFailed());
+    yield put(
+      vanActions.addVanFailed("Something went wrong, please try again!")
+    );
   }
 }
 

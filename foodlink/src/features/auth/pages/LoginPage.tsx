@@ -1,17 +1,24 @@
+import { Button, Card, Typography, Form, Input, Divider } from "antd";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { authActions, selectIsLoggedIn, selectMessage } from "../authSlice";
+const { Title } = Typography;
 
-export const LoginPage = () => {
-  const dispatch = useAppDispatch();
+export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const loginSuccess = useAppSelector(selectIsLoggedIn);
-  const messageFailed = useAppSelector(selectMessage);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState(false);
+  const messageFailed = useAppSelector(selectMessage);
+  const loginSuccess = useAppSelector(selectIsLoggedIn);
+
+  const onFinish = (values: any) => {
+    dispatch(authActions.login(values));
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
 
   // If login successed, redirect to admin page
   useEffect(() => {
@@ -30,62 +37,56 @@ export const LoginPage = () => {
     }
   }, [messageFailed]);
 
-  //dispatch login action
-  const loginSubmitHandler = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    const userData = {
-      email,
-      password,
-    };
-    dispatch(authActions.login(userData));
-  };
-
   return (
-    <>
-      <Card style={{ width: "500px" }} className="mx-auto mt-5">
-        <Card.Body>
-          <Card.Title className="d-flex justify-content-center">
-            LOGIN
-          </Card.Title>
-          {errorMessage && (
-            <Card.Text style={{ color: "red" }}>{messageFailed}</Card.Text>
-          )}
-          <Form onSubmit={loginSubmitHandler}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email:</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                required
-              />
-            </Form.Group>
+    <Card
+      style={{
+        width: 400,
+        margin: "auto",
+        marginTop: 75,
+      }}
+    >
+      <Title
+        level={3}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        Login
+      </Title>
+      <Divider style={{ marginTop: 10 }} />
+      <Form
+        name="basic"
+        labelCol={{ span: 6 }}
+        wrapperCol={{ span: 18 }}
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        {errorMessage && <p style={{ color: "red" }}>{messageFailed}</p>}
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: "Please input your Email!" }]}
+        >
+          <Input />
+        </Form.Item>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                required
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Login
-            </Button>
-          </Form>
-          <div className="d-flex flex-row mt-3 justify-content-end">
-            <div className="align-self-center">
-              You do not have an account? click here
-            </div>
-            <Link to="/register">
-              <Button className="align-self-center mx-2">Register</Button>
-            </Link>
-          </div>
-        </Card.Body>
-      </Card>
-    </>
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: "Please input your password!" }]}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };

@@ -1,77 +1,106 @@
-import { useEffect, useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+// import { Button, Card, Form } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { Navigation } from "./Navigation";
-import { selectAdding, vanActions } from "../../features/vans/vanSlice";
+import {
+  selectAdding,
+  selectVansMessage,
+  vanActions,
+} from "../../features/vans/vanSlice";
+import { Button, Modal, Form, Input, Select, Typography } from "antd";
+const { Option } = Select;
+const { Title } = Typography;
 
 export interface AddPayload {
   vanId: string;
   status: string;
 }
-
-export const AddProduct = () => {
+export const AddProduct: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const vanMessage = useAppSelector(selectVansMessage);
   const isAdded = useAppSelector(selectAdding);
-  const [name, setName] = useState<string>("");
-  const [status, setStatus] = useState<string>("Active");
+  const [visible, setVisible] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [name, setName] = useState("");
 
   // dispatch actions
-  const submitHandler = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    const payload: AddPayload = {
-      vanId: name,
-      status,
-    };
-    dispatch(vanActions.addVan(payload));
+  const submitHandler = (value: AddPayload) => {
+    dispatch(vanActions.addVan(value));
   };
 
-  // navigate to admin if successful add
   useEffect(() => {
-    if (isAdded) {
-      navigate("/admin");
-    }
+    dispatch(vanActions.getVans());
   }, [isAdded]);
+
+  useEffect(() => {
+    setShowMessage(true);
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 3000);
+  }, [vanMessage]);
+
+  const showModal = () => {
+    setVisible(true);
+    setName("");
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
 
   return (
     <>
-      <Navigation />
-      <Card style={{ width: "500px" }} className="mx-auto mt-5">
-        <Card.Body>
-          <Card.Title className="d-flex justify-content-center">
-            ADD NEW PRODUCT
-          </Card.Title>
-          <Form onSubmit={submitHandler}>
-            <Form.Group className="mb-3">
-              <Form.Label>Name:</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Status:</Form.Label>
-              <Form.Select
-                aria-label="Default select example"
-                className="mb-2"
-                onChange={(e) => setStatus(e.target.value)}
-                value={status}
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="d-flex justify-content-center">
-              <Button variant="primary" type="submit">
-                Add new product
+      <Button type="primary" onClick={showModal}>
+        Add new van
+      </Button>
+      <Modal
+        visible={visible}
+        title="Add new product"
+        footer={null}
+        closable={false}
+      >
+        {showMessage && (
+          <Title level={5} type="danger">
+            {vanMessage}
+          </Title>
+        )}
+        <Form onFinish={submitHandler}>
+          <Form.Item
+            label="Name"
+            name="vanId"
+            rules={[{ required: true, message: "Please input your Van name!" }]}
+          >
+            <Input value={name} onChange={(e) => setName(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "Please input your username!" }]}
+            initialValue="Active"
+          >
+            <Select style={{ width: 150 }}>
+              <Option value="Active">Active</Option>
+              <Option value="Inactive">Inactive</Option>
+            </Select>
+          </Form.Item>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "end",
+              marginRight: "20px",
+            }}
+          >
+            <Button key="back" onClick={handleCancel}>
+              Close
+            </Button>
+
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Submit
               </Button>
-            </Form.Group>
-          </Form>
-        </Card.Body>
-      </Card>
+            </Form.Item>
+          </div>
+        </Form>
+      </Modal>
     </>
   );
 };
