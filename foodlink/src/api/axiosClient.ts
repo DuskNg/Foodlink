@@ -15,6 +15,11 @@ axiosClient.interceptors.request.use(
       "color:purple",
       config?.url
     );
+    config.headers = {
+      Authorization: `${localStorage.getItem("accessToken")}`,
+      ...config.headers,
+    };
+
     // Do something before request is sent
     return config;
   },

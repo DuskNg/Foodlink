@@ -13,43 +13,23 @@ const vansApi = {
 
   getById(id: string): Promise<Vans> {
     const url = `/vans/${id}`;
-    const config = {
-      headers: {
-        Authorization: `${localStorage.getItem("accessToken")}`,
-      },
-    };
-    return axiosClient.get(url, config);
+    return axiosClient.get(url);
   },
 
   add(data: AddPayload): Promise<Vans> {
     const url = "/vans";
-    const config = {
-      headers: {
-        Authorization: `${localStorage.getItem("accessToken")}`,
-      },
-    };
-    return axiosClient.post(url, data, config);
+    return axiosClient.post(url, data);
   },
 
   update(data: UpdatePayload): Promise<Vans> {
     const url = "/vans";
-    const config = {
-      headers: {
-        Authorization: `${localStorage.getItem("accessToken")}`,
-      },
-    };
-    return axiosClient.put(url, data, config);
+    return axiosClient.put(url, data);
   },
 
   delete(payload: DeletePayload): Promise<any> {
-    const { id, token } = payload;
+    const { id } = payload;
     const url = `/vans/${id}`;
-    const config = {
-      headers: {
-        Authorization: `${token}`,
-      },
-    };
-    return axiosClient.delete(url, config);
+    return axiosClient.delete(url);
   },
 };
 

@@ -27,6 +27,7 @@ const authSlice = createSlice({
   reducers: {
     login(state, action: PayloadAction<LoginPayload>) {
       state.logging = true;
+      state.message = "";
     },
 
     loginSucceeded(state, action: PayloadAction<User>) {
